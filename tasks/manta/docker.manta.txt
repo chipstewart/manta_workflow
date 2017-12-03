@@ -1,0 +1,59 @@
+FROM ubuntu:16.04
+RUN apt-get update && apt-get install -y python sudo dstat 
+RUN apt-get update && apt-get install -y bzip2 gcc g++ make zlib1g-dev
+
+RUN \
+  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get -y upgrade && \
+  apt-get install -y build-essential && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y byobu curl git htop man unzip vim wget perl libz-dev && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y samtools
+#RUN mkdir -p /opt/bcftools_build && cd /opt/bcftools_build && git clone --branch=develop git://github.com/samtools/htslib.git && git clone --branch=develop git://github.com/samtools/bcftools.git && git clone --branch=develop git://github.com/samtools/samtools.git && cd bcftools &&  make && cd ../samtools &&  make
+
+
+#// Set environment variables.
+ENV HOME /root
+WORKDIR /root
+
+
+#will it work to go into a mounted dir?
+WORKDIR /opt/src
+
+#ENV PS1="\\u@\\h:\\w\\$"
+RUN rm -f /root/.scripts/git-prompt.sh
+
+#Set timezone on Docker instance to something other than UCT.
+#RUN rm /etc/localtime
+#RUN apt-get update && apt-get upgrade -y &&  apt-get install -y locales
+#RUN echo "America/New_York"  > /etc/timezone &&  dpkg-reconfigure --frontend noninteractive tzdata
+#RUN ln -fs /usr/share/zoneinfo/US/America/New_York /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
+RUN apt-get update && \
+    apt-get install -y software-properties-common apt-utils locales tzdata
+RUN echo "tzdata tzdata/Areas select America" > timezone.txt
+RUN echo "tzdata tzdata/Zones/America select New_York" >> timezone.txt
+RUN debconf-set-selections timezone.txt
+RUN rm /etc/timezone
+RUN rm /etc/localtime
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+RUN mkdir -p /opt/src/manta && cd /opt/src/manta && wget --no-check-certificate 'https://github.com/Illumina/manta/releases/download/v1.2.2/manta-1.2.2.centos6_x86_64.tar.bz2' && bzip2 -d manta-1.2.2.centos6_x86_64.tar.bz2  &&  tar xvf manta-1.2.2.centos6_x86_64.tar && cd manta-1.2.2.centos6_x86_64  && python /opt/src/manta/manta-1.2.2.centos6_x86_64/bin/runMantaWorkflowDemo.py
+
+
+ENV CACHE_UPDATE 4
+
+ENV LD_LIBRARY_PATH=
+
+RUN chmod go+w /opt/src
+
+RUN chmod go+wrx /home
+ENV HOME /home
+
+#copy contents of tasks/<taskname>/build/src on the build host into /opt/src on the docker
+COPY src/ /opt/src/
+
+WORKDIR /opt/src

@@ -1,0 +1,11 @@
+{
+  "manta_workflow.manta.pair_id": "HCC1143",
+  "manta_workflow.manta.tumor_bam": "gs://firecloud-tcga-open-access/tutorial/bams/C835.HCC1143.2.chr21.bam",
+  "manta_workflow.manta.tumor_bai": "gs://firecloud-tcga-open-access/tutorial/bams/C835.HCC1143.2.chr21.bam.bai",
+  "manta_workflow.manta.normal_bam": "gs://firecloud-tcga-open-access/tutorial/bams/C835.HCC1143_BL.4.chr21.bam",
+  "manta_workflow.manta.normal_bai": "gs://firecloud-tcga-open-access/tutorial/bams/C835.HCC1143_BL.4.chr21.bam.bai",
+  "manta_workflow.manta.genome": "gs://firecloud-tcga-open-access/tutorial/reference/Homo_sapiens_assembly19.fasta",
+  "manta_workflow.manta.genome_dict": "gs://firecloud-tcga-open-access/tutorial/reference/Homo_sapiens_assembly19.dict",
+  "manta_workflow.manta.genome_index": "gs://firecloud-tcga-open-access/tutorial/reference/Homo_sapiens_assembly19.fasta.fai",
+  "manta_workflow.manta.output_disk_gb": "100"
+}
